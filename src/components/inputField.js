@@ -1,13 +1,16 @@
 import axios from "axios"
 import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from "react-redux"
 
 const InputField = () => {
   // Save names into useState array
   const [userData, setUserData] = useState([])
-  const [text, setText] = useState("")
+  const dispatch = useDispatch()
+  const searchText = useSelector(state => state.search)
 
   const onChangeFun = (e) => {
-    setText(e.target.value)
+    // Save the input value into the state
+    dispatch({ type: "ADD_TO_SEARCH", payload: e.target.value })
   }
 
   // Useeffect
@@ -30,8 +33,8 @@ const InputField = () => {
         <div>
           <input
             type="text"
-            onChange={(e) => onChangeFun(e)}
-            value={text}
+            onChange={onChangeFun}
+            value={searchText}
             placeholder="Search.."
           />
         </div>
@@ -39,9 +42,9 @@ const InputField = () => {
       </form>
       {/* Filter through userData */}
       {userData.filter((val) => {
-        if (text === "") {
+        if (searchText === "") {
           return val
-        } else if (val.name.toLowerCase().includes(text.toLowerCase())) {
+        } else if (val.name.toLowerCase().includes(searchText.toLowerCase())) {
           return val
         }
         {/* Map through results */ }
